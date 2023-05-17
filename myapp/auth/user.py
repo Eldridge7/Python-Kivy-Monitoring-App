@@ -5,7 +5,7 @@ from myapp.db import create_connection
 
 
 def register_user(email, password):
-    connection = create_connection("localhost", "root", "079Geo@712", "app_db")
+    connection = create_connection("localhost", "root", "password", "app_db")
     if not is_valid_email(email) or not is_valid_password(password):
         return False
     cursor = connection.cursor()
@@ -16,7 +16,7 @@ def register_user(email, password):
     return cursor.rowcount == 1
 
 def validate_user(email, password):
-    connection = create_connection("localhost", "root", "079Geo@712", "app_db")
+    connection = create_connection("localhost", "root", "password", "app_db")
     cursor = connection.cursor()
     cursor.execute(f"SELECT password FROM users WHERE email='{email}'")
     user = cursor.fetchone()
