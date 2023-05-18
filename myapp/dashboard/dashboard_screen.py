@@ -50,7 +50,12 @@ class DashboardScreen(Screen):
         self.network_uptime = f'{(successful_pings / count) * 100:.1f}%'
 
     def get_latency(self):
-        return ping('8.8.8.8')
+        latency = ping('8.8.8.8')
+        if latency is None:
+            return 'Ping failed'
+        else:
+            return latency
+
 
     def update_metrics(self, *args):
         # Check if the uptime thread is alive
@@ -74,7 +79,11 @@ class DashboardScreen(Screen):
         # Get disk I/O
         disk_io = psutil.disk_io_counters()
 
-        self.latency = f'{latency:.1f} ms'  # Milliseconds
+        if latency != 'Ping failed':
+            self.latency = f'{latency:.1f} ms'  # Milliseconds
+        else:
+            self.latency = latency
+            
         self.packet_loss = f'Upload: {sent_rate_kb} KB/s, Download: {recv_rate_kb} KB/s'
         self.cpu_usage = f'{cpu_usage}%'  # Update CPU usage
         self.memory_usage = f'{memory_usage}%'  # Update memory usage
