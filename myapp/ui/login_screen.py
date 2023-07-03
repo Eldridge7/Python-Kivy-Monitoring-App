@@ -8,7 +8,9 @@ from kivymd.app import MDApp
 from kivymd.uix.label import MDLabel
 from kivymd.uix.button import MDFlatButton, MDRaisedButton
 from kivymd.uix.textfield import MDTextField
-from ..auth.user import validate_user, is_valid_email, is_valid_password
+from myapp.ui.consent_form import ConsentForm
+from ..auth.user import validate_user, is_valid_email, is_valid_password, get_user_id
+# from ui.consent_form import ConsentForm
 
 
 class LoginScreen(Screen):
@@ -59,6 +61,13 @@ class LoginScreen(Screen):
         self.signup.bind(on_press=self.create_account)
         self.link_layout.add_widget(self.signup)
 
+        # Admin Login button
+        self.admin_login = MDFlatButton(text="Admin Login")
+        self.admin_login.bind(on_press=self.switch_to_admin_login)
+        self.link_layout.add_widget(self.admin_login)
+
+
+       # Add self.link_layout to self.layout once, after all buttons have been added
         self.layout.add_widget(self.link_layout)
 
     def validate_user(self, instance):
@@ -66,7 +75,8 @@ class LoginScreen(Screen):
             self.error.text = '[color=ff3333]Invalid email or password format.[/color]'
             return
         if validate_user(self.email.text, self.password.text):
-            self.manager.current = "dashboard_screen"
+            self.manager.user_id = get_user_id(self.email.text)
+            self.manager.current = "consent_form_screen"  # Change this to consent form
             print("Logged in successfully!")
         else:
             self.error.text = '[color=ff3333]Invalid email or password.[/color]'
@@ -75,4 +85,8 @@ class LoginScreen(Screen):
         print("Reset password link clicked!")
 
     def create_account(self, instance):
-        self.manager.current = 'register'
+        self.manager.current = 'register_screen'
+
+    # add this new method to your LoginScreen class
+    def switch_to_admin_login(self, instance):
+        self.manager.current = 'admin_login_screen'

@@ -9,7 +9,7 @@ from kivymd.uix.label import MDLabel
 from kivymd.uix.button import MDFlatButton, MDRaisedButton
 from kivymd.uix.textfield import MDTextField
 
-from ..auth.user import  register_user, is_valid_email, is_valid_password
+from ..auth.user import  register_user, is_valid_email, is_valid_password, get_user_id
 
 class RegistrationScreen(Screen):
     def __init__(self, **kwargs):
@@ -73,9 +73,12 @@ class RegistrationScreen(Screen):
             self.error.text = '[color=ff3333]Invalid email or password format.[/color]'
             return
         if register_user(self.email.text, self.password.text):
+            self.manager.user_id = get_user_id(self.email.text)
+            self.manager.current = "consent_form_screen"
             print("Registered successfully!")
+            print("Logged in successfully!")
         else:
             self.error.text = '[color=ff3333]Registration failed. Try again.[/color]'
 
     def go_to_login(self, instance):
-        self.manager.current = 'login'
+        self.manager.current = 'login_screen'
